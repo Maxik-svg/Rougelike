@@ -14,7 +14,7 @@ public class LevelGenerator : MonoBehaviour
     float worldUnitsInOneGridCell = 1;
         
     enum Mobs { mob1, boss1, boss2, boss3 };
-    public GameObject portal, mob1, boss1, boss2, boss3;
+    public GameObject portal, mob1, boss1, boss2;
     private GameObject player;
 
     public float distance;
@@ -36,12 +36,21 @@ public class LevelGenerator : MonoBehaviour
     int maxWalkers = 10;
     float percentToFill = 0.2f;
     public GameObject floor1, floor2, floor3, wall, l, u, r, d, luc, ldc, ruc, rdc, rd, ru, ld, lu;
+
+    NormalGenerationCheck normalGenerationCheck; 
     public void Start()
     {
         Setup();
         CreateFloors();
         CreateWalls();
         SpawnLevel();
+        
+        normalGenerationCheck = GameObject.FindGameObjectWithTag("levelGenerator").GetComponent<NormalGenerationCheck>();
+        print(NormalGeneration());
+        if(!NormalGeneration()){
+            Restarter r = new Restarter();
+            r.Restart();
+        }
         SpawnMob();
     }
     void Setup()
@@ -480,7 +489,7 @@ public class LevelGenerator : MonoBehaviour
                     case gridSpace.empty:
                         break;
                     case gridSpace.floor:
-                        float f = Random.Range(0f, 2.5f);
+                        float f = Random.Range(0f, 3f);
                         if (f < 1)
                         {
                             Spawn(x, y, floor1);
@@ -580,6 +589,24 @@ public class LevelGenerator : MonoBehaviour
         Instantiate(toSpawn, spawnPos, Quaternion.identity); // поиграться с углами
     }
 
+    bool NormalGeneration()
+    {
+        if (LVL % 3 != 0)
+        {
+            int achievable = 0;
+            for (int i = 0; i < floorC; i++)
+            {
+                achievable += normalGenerationCheck.GetAvailable(new Vector2(floorForSpawnMob[0, 0], floorForSpawnMob[0, 1]), new Vector2(floorForSpawnMob[i, 0], floorForSpawnMob[i, 1]));
+            }
+            if (achievable == floorC)
+            {
+                return true;
+            }
+            else return false;
+        }
+        return true;
+    }
+
     public void SpawnMob()
     {
         MobCountOnLvl = 0;
@@ -612,7 +639,7 @@ public class LevelGenerator : MonoBehaviour
                     }
                 }
             }
-            print(MobCountOnLvl);
+            //print(MobCountOnLvl);
         }
         else
         {
@@ -622,27 +649,20 @@ public class LevelGenerator : MonoBehaviour
 
 
 
-            int r = (int)Random.Range(0f, 3f);
+            float r = Random.Range(0f, 2f);
 
-            if (r == 0)
+            if (r <1 )
             {
                 Instantiate(boss1, new Vector3(10, 10, -89), Quaternion.identity);
                 MobCountOnLvl++;
             }
 
-            else if (r == 1)
+            else if (r <2 )
             {
                 Instantiate(boss2, new Vector3(7, 7, -89), Quaternion.identity);
                 MobCountOnLvl++;
-            }
-
-            else if (r == 2)    
-            {
-                Instantiate(boss3, new Vector3(10, 10, -89), Quaternion.identity);
-                MobCountOnLvl++;
-            }            
-        }
-       
+            }   
+        }       
     }
         
     

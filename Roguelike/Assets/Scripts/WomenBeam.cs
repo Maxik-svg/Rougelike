@@ -5,15 +5,13 @@ using UnityEngine;
 public class WomenBeam : MonoBehaviour
 {
     public float damage;
-    public float startTimeBtwAttac;
-    private float timeBtwAttac;
+    public float timeBtwAttac;
     private PlayerHP playerHP;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerHP = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHP>();
-        timeBtwAttac = startTimeBtwAttac;
+        playerHP = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHP>();        
     }
 
     // Update is called once per frame
@@ -29,10 +27,22 @@ public class WomenBeam : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (timeBtwAttac <= 0)
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                playerHP.TakingDamage(damage);
+                Destroy(gameObject);
+            }
+            Destroy(gameObject);
+        }
+    }
     void Update()
     {
         timeBtwAttac -= Time.deltaTime;
-        if (timeBtwAttac <= -0.01)
+        if (timeBtwAttac <= -0.05)
         {
             Destroy(gameObject);
         }

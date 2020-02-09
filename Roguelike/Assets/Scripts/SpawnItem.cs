@@ -6,6 +6,7 @@ public class SpawnItem : MonoBehaviour
 {
     public GameObject item;
     private Transform player;
+    public string type;
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;

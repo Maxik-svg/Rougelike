@@ -7,20 +7,23 @@ public class PlayerAttack : MonoBehaviour
     public Transform attackPos;
     public LayerMask whatIsEnemies;
     public float attackRange;
-    public float startDamage; //не только стартовый урон. Пояснение: урон без бафа или дебафа
+
+
     public float startTimeBtwAttac;
     public float timeForScroll;
 
+    public float MaxDamage; //максимальный урон без шмотки
+    public float currentMaxDamage; //максимальный урон под бафом шмотки
+    public float currentDamage;//текущее
 
-    private float currentDamage;
     private Inventory inventory;
     private float timeBtwAttac = 0;
 
     private void Start()
     {
         inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
-        startDamage = 4;
-        currentDamage = startDamage;
+        currentMaxDamage = 4;
+        currentDamage = MaxDamage = currentMaxDamage;
     }
 
     void Update()
@@ -41,14 +44,16 @@ public class PlayerAttack : MonoBehaviour
 
                     if (enemiesToDamage[i].GetComponent<Enemy>() != null)
                         enemiesToDamage[i].GetComponent<Enemy>().TakeDamage(currentDamage);
+                    if (enemiesToDamage[i].GetComponent<Boss1Enemy>() != null)
+                        enemiesToDamage[i].GetComponent<Boss1Enemy>().TakeDamage(currentDamage);
                     if (enemiesToDamage[i].GetComponent<Boss2Enemy>() != null)
                         enemiesToDamage[i].GetComponent<Boss2Enemy>().TakeDamage(currentDamage);
-   
+
                 }
                 timeBtwAttac = startTimeBtwAttac;
-                
+
             }
-            
+
         }
         else
         {
@@ -63,7 +68,7 @@ public class PlayerAttack : MonoBehaviour
         }
         else
         {
-            currentDamage = startDamage;
+            currentDamage = currentMaxDamage;
         }
     }
     private void OnDrawGizmosSelected()
@@ -80,7 +85,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 if (inventory.slots[i].transform.GetChild(0).CompareTag("Scroll"))
                 {
-                    currentDamage = startDamage * 1.5f;
+                    currentDamage = currentMaxDamage * 1.5f;
                     timeForScroll = 15f;
                     inventory.isFull[i] = false;
                     foreach (Transform t in inventory.slots[i].transform)
@@ -95,6 +100,26 @@ public class PlayerAttack : MonoBehaviour
                 continue;
             }
 
+        }
+    }
+    public void DamageBuff(float damaheBuff)
+    {
+        currentMaxDamage = MaxDamage * (1 + damaheBuff);
+    }
+    public void LvlDamageUp()
+    {
+        {
+            bool Is = false;
+            if (currentMaxDamage > MaxDamage)
+                Is = true;
+            MaxDamage = 4 * LevelGenerator.LVL;
+            currentMaxDamage = MaxDamage;
+            //тут еще что то нужно, типо когда на некст лвл переход, и есть активная шмотка, то и карентМакс нужно увеличить
+            //пошаманить потом
+            if (Is)
+            {
+                AmuletBuff.SetBuff(0, 0.3f, 1);
+            }
         }
     }
 }

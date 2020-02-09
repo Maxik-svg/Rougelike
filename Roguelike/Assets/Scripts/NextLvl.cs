@@ -53,8 +53,14 @@ public class NextLvl : MonoBehaviour
             for (int i = 0; i < objs2.Length; i++)
                 Destroy(objs2[i]);
 
+            objs2 = GameObject.FindGameObjectsWithTag("AmuletItem"); // возвращает МАССИВ!
+            for (int i = 0; i < objs2.Length; i++)
+                Destroy(objs2[i]);
             PlayerHP pl = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHP>();
             pl.LvlHPUp();
+            PlayerAttack p2 = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerAttack>();
+            p2.LvlDamageUp();
+
 
             GameObject go = GameObject.FindGameObjectWithTag("levelGenerator");
             go.GetComponent<LevelGenerator>().Start();

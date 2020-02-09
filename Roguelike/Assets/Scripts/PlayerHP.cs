@@ -6,9 +6,15 @@ using UnityEngine.UI;
 
 public class PlayerHP : MonoBehaviour
 {
-    public float maxHP;
-    public float currentHP;
-    public float damageRatio;
+    public float maxHP;//максимальное хп без шмотки
+    public float currentMaxHP;//максимальное хп под бафом шмотки
+    public float currentHP;//текущее
+
+    public float maxDamageRatio;//максимальный коеф без шмотки    
+    public float currentMaxDamageRatio;//текущий под бафом шмотки
+    public float currentDamageRatio;//текущий коеф дамага
+
+
     public Slider slider;
     public Image fillImage;
     public float timeForSoul;
@@ -21,9 +27,9 @@ public class PlayerHP : MonoBehaviour
     private int changeColorTime = 5;
     void Start()
     {
-        maxHP = 9f;
-        currentHP = 5f;
-        damageRatio = 1;
+        maxHP = 16f;
+        currentHP  = currentMaxHP = maxHP;
+        maxDamageRatio = currentMaxDamageRatio = 1;
         DisplayHP();
         inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
         activeSoul = false;
@@ -34,7 +40,7 @@ public class PlayerHP : MonoBehaviour
 
     private void Update()
     {
-        if (currentHP / maxHP < 0.15f)
+        if (currentHP / currentMaxHP < 0.15f)
         {
             if (changeColorTime <= 0)
             {
@@ -73,13 +79,13 @@ public class PlayerHP : MonoBehaviour
         else
         {
             activeSoul = false;
-            damageRatio = 1f;
+            currentDamageRatio = currentMaxDamageRatio;
         }
     }
     //получение урона и снижение его под бафами свитка
     public void TakingDamage(float damage)
     {
-        currentHP = currentHP - damage * damageRatio;
+        currentHP = currentHP - damage * currentDamageRatio;
         DisplayHP();
     }
 
@@ -92,10 +98,10 @@ public class PlayerHP : MonoBehaviour
             {
                 if (inventory.slots[i].transform.GetChild(0).CompareTag("HealthPotion"))
                 {
-                    currentHP += 6;
-                    if (currentHP > maxHP)
+                    currentHP += 10;
+                    if (currentHP > currentMaxHP)
                     {
-                        currentHP = maxHP;
+                        currentHP = currentMaxHP;
                     }
                     inventory.isFull[i] = false;
                     foreach (Transform t in inventory.slots[i].transform)
@@ -124,7 +130,7 @@ public class PlayerHP : MonoBehaviour
             {
                 if (inventory.slots[i].transform.GetChild(0).CompareTag("Soul"))
                 {
-                    damageRatio = 0.4f;
+                    currentDamageRatio = currentMaxDamageRatio * 0.4f;
                     activeSoul = true;
                     timeForSoul = 15f;
                     inventory.isFull[i] = false;
@@ -144,7 +150,7 @@ public class PlayerHP : MonoBehaviour
     }
     private void DisplayHP()
     {
-        float HPSlider = currentHP / maxHP;
+        float HPSlider = currentHP / currentMaxHP;
 
         if(HPSlider > 0.10f)
         {
@@ -166,11 +172,36 @@ public class PlayerHP : MonoBehaviour
 
     public void LvlHPUp()
     {
-        maxHP = 9 * LevelGenerator.LVL;
-        currentHP += 9f;
-        if (currentHP > maxHP)
+        bool Is = false;
+        if (currentMaxHP > maxHP)
+            Is = true;
+        maxHP = 16 * LevelGenerator.LVL;
+        //тут еще что то нужно, типо когда на некст лвл переход, и есть активная шмотка, то и карентМакс нужно увеличить
+        //пошаманить потом
+        currentMaxHP = maxHP;
+        if (Is)
         {
-            currentHP = maxHP;
+            AmuletBuff.SetBuff(0.3f, 0, 0);
+        }
+        currentHP += 16f;
+        if (currentHP > currentMaxHP)
+        {
+            currentHP = currentMaxHP;
+        }
+        DisplayHP();
+    }
+
+    public void HPBuff(float hpBuff)
+    {
+        currentMaxHP = maxHP * (1 + hpBuff);
+        DisplayHP();
+    }
+    public void RatioBuff(float ratioBuff)
+    {
+        currentMaxDamageRatio = maxDamageRatio * ratioBuff;
+        if (currentHP > currentMaxHP)
+        {
+            currentHP = currentMaxHP;
         }
         DisplayHP();
     }

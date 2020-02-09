@@ -6,17 +6,8 @@ using UnityEngine.SceneManagement;
 public class Restarter : MonoBehaviour
 {
 
-    void Update()
-    {
-        if (Input.GetKeyDown("]"))
-        {
-            Restart();
-        }
-    }
-
     public void Restart()
     {
-        LevelGenerator.LVL++;
         var objs = GameObject.FindGameObjectsWithTag("wall"); // возвращает МАССИВ!
         for (int i = 0; i < objs.Length; i++)
             Destroy(objs[i]);
@@ -44,17 +35,16 @@ public class Restarter : MonoBehaviour
         objs2 = GameObject.FindGameObjectsWithTag("floor"); // возвращает МАССИВ!
         for (int i = 0; i < objs2.Length; i++)
             Destroy(objs2[i]);
-        //убрать
+
         objs2 = GameObject.FindGameObjectsWithTag("Enemy"); // возвращает МАССИВ!
         for (int i = 0; i < objs2.Length; i++)
             Destroy(objs2[i]);
 
-        PlayerHP pl = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerHP>();
-        pl.LvlHPUp();
+        objs2 = GameObject.FindGameObjectsWithTag("AmuletItem"); // возвращает МАССИВ!
+        for (int i = 0; i < objs2.Length; i++)
+            Destroy(objs2[i]);
 
         GameObject go = GameObject.FindGameObjectWithTag("levelGenerator");
         go.GetComponent<LevelGenerator>().Start();
-
-
     }
 }

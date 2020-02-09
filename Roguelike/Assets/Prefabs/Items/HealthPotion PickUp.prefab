@@ -96,6 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemButton: {fileID: 2537070708816223498, guid: df32d059bc730904182b558af936a0da,
     type: 3}
+  type: consumable
 --- !u!58 &8973415646572100676
 CircleCollider2D:
   m_ObjectHideFlags: 0

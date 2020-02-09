@@ -25,7 +25,7 @@ public class Boss2Enemy : MonoBehaviour
     private float timeBtwPowerAttacShoot = 0;
     public int startShootCount;
     private int shootCount;
-    public GameObject HealthPotion, Scroll, Soull;
+    public GameObject HealthPotion, Scroll, Soull, GAmulet, BAmulet, YAmulet;
     public Slider slider;
 
     public GameObject projectile;
@@ -85,6 +85,8 @@ public class Boss2Enemy : MonoBehaviour
         DisplayHP();
         if (currentHP <= 0)
         {
+            AmuletBuff.countDeadMobs += 5;
+
             for (int i = 0; i < 5; i++)
             {
                 Vector3 itemDropPos;
@@ -114,10 +116,35 @@ public class Boss2Enemy : MonoBehaviour
                     Instantiate(HealthPotion, itemDropPos, Quaternion.identity);
                 }
             }
-            
+            Vector3 itemDropPos1;
+            float r1 = Random.Range(0f, 1f);
+            if (r1 <= DropAmuletChance(3, AmuletBuff.GdropCount, AmuletBuff.countDeadMobs))
+            {
+                itemDropPos1 = new Vector3(transform.position.x + Random.Range(-0.25f, 0.25f), transform.position.y + Random.Range(-0.25f, 0.25f), -87);
+                Instantiate(GAmulet, itemDropPos1, Quaternion.identity);
+                AmuletBuff.GdropCount++;
+            }
+            if (r1 <= DropAmuletChance(2, AmuletBuff.BdropCount, AmuletBuff.countDeadMobs))
+            {
+                itemDropPos1 = new Vector3(transform.position.x + Random.Range(-0.25f, 0.25f), transform.position.y + Random.Range(-0.25f, 0.25f), -87);
+                Instantiate(BAmulet, itemDropPos1, Quaternion.identity);
+                AmuletBuff.BdropCount++;
+            }
+            if (r1 <= DropAmuletChance(2, AmuletBuff.YdropCount, AmuletBuff.countDeadMobs))
+            {
+                itemDropPos1 = new Vector3(transform.position.x + Random.Range(-0.25f, 0.25f), transform.position.y + Random.Range(-0.25f, 0.25f), -87);
+                Instantiate(YAmulet, itemDropPos1, Quaternion.identity);
+                AmuletBuff.YdropCount++;
+            }
+
+
             GameObject.FindGameObjectWithTag("levelGenerator").GetComponent<LevelGenerator>().DecreaseMobCountOnLvl();
             Destroy(gameObject);
         }
+    }
+    float DropAmuletChance(float k, float dropCount, float countDeadMobs)
+    {
+        return ((k - dropCount) / (100 - countDeadMobs)) * 1.4f * (k - dropCount);
     }
     private void DisplayHP()
     {

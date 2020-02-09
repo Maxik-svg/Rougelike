@@ -122,11 +122,22 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2537070708816223500, guid: df32d059bc730904182b558af936a0da,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2537070708816223501, guid: df32d059bc730904182b558af936a0da,
         type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 97fc275483055044d8db1fe11b762fd8,
+        type: 3}
+    - target: {fileID: 3753597502946793874, guid: df32d059bc730904182b558af936a0da,
+        type: 3}
+      propertyPath: info
+      value: 
+      objectReference: {fileID: 7749804760765197182, guid: 6bf1683c4358eae44b776ad4fd02d7ee,
         type: 3}
     - target: {fileID: 7092229473042076162, guid: df32d059bc730904182b558af936a0da,
         type: 3}

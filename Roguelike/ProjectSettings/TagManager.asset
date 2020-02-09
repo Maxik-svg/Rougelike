@@ -18,6 +18,10 @@ TagManager:
   - ForEmptyArr
   - BossNameText
   - BossHPBarSlider
+  - AmuletItem
+  - GAmulet
+  - BAmulet
+  - YAmulet
   layers:
   - Default
   - TransparentFX
